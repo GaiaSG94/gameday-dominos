@@ -23,6 +23,24 @@ Observé :
 
 À faire : **Gaia, quelle est la bonne adresse ?** (studio, appli, autre domaine). Je mettrai cette fiche à jour au prochain passage.
 
+## Jeux de référence (ajout V2, 2026-11-18)
+
+Sources ouvertes : page du hackathon (redditgameofday2026.devpost.com, section « Things that will make your daily game stand out »), galerie des gagnants du hackathon Reddit précédent (redditfunandgames.devpost.com/project-gallery : Hexaword, Out Floop…), article des gagnants « Games with a Hook » (phaser.io, août 2026 : Cattack!, Hearthvale, Gradient Descent…). Reddit lui-même (r/hotandcold, r/syllo, r/pocketgrids, r/GameOnReddit) et puzzmo.com sont bloqués dans le navigateur intégré : non consultés.
+
+Observé :
+- Les gagnants **ont un monde** : planètes dessinées à la main (Cattack!), village isométrique en volume sur un ciel chaud (Hearthvale), corde en 3D posée sur un fond clair (Out Floop). L'image du jeu remplit le cadre.
+- L'UI se réduit à **quelques pastilles posées sur la scène** : titre-logo avec du caractère, date et compteur en petit, un seul bouton. Aucun panneau de stats.
+- Le jury demande en toutes lettres : « clear visual identity », « remove clutter during active play », « fit the UI in the viewport », pas d'« AI slop » ni de composants génériques. Il ne demande **pas** de version mobile.
+- Hexaword (gagnant « Daily ») est visuellement modeste (aplat sombre, tuiles hexagonales). La barre est donc franchissable par la matière seule.
+
+À retenir pour Dominos :
+1. **L'objet d'abord** : de vraies pièces de domino (faces, tranches, points, pivot, rainure), posées sur une vraie surface, avec ombres portées. C'est l'identité.
+2. **La règle se voit dans la scène** : une pièce tombée montre sa face, et ses points comptent son rang de chute. La flèche de visée est posée au sol.
+3. **Trois pastilles et un bouton**, rien d'autre pendant le jeu.
+
+### Ce qu'on n'emprunte pas (jeux)
+Aucun visuel, personnage, logo ni titre de ces jeux. On prend le principe « monde + objet + UI minimale », pas leur style.
+
 ## Ce qu'on n'emprunte pas
 
 - Le dispositif de galerie 3D navigable de Shutabug, ses œuvres, ses textes, sa marque, sa police.

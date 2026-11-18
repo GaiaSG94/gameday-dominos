@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dominos · Jeu V2 · 02 Encre</title>
+<style>
+/* ---------- Planche (hors produit) ---------- */
+*{box-sizing:border-box}
+html,body{margin:0;background:#cfccc6;font-family:"Liberation Sans",Arial,sans-serif;color:#1a1a1b}
+.wrap{padding:16px;overflow:hidden}
+body.real .wrap{overflow:visible}
+.board{transform-origin:0 0;width:max-content;background:#fbfaf8;padding:32px 40px 40px;border-radius:6px}
+.board-h{display:flex;gap:40px;align-items:flex-end;justify-content:space-between;margin-bottom:24px;width:1440px}
+.board-h small{font:600 12px/1.4 "DejaVu Sans Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8b867d}
+.board-h h1{margin:6px 0 8px;font-size:36px;letter-spacing:-.02em}
+.board-h p{margin:0;font-size:15px;line-height:1.45;color:#45423d;max-width:760px}
+.sw{display:flex;gap:6px}.sw span{width:58px;height:58px;border-radius:4px;display:flex;align-items:flex-end;padding:5px;font:10.5px "DejaVu Sans Mono",monospace;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.zoom{font:600 12px "DejaVu Sans Mono",monospace;border:1px solid #c9c5be;background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.cap{font:600 12px "DejaVu Sans Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8b867d;margin-bottom:10px}
+/* ---------- Écran desktop : post ouvert en grand au-dessus du feed ---------- */
+.screen{position:relative;width:1440px;height:900px;overflow:hidden;background:#eef0f2;box-shadow:0 18px 40px rgba(0,0,0,.14)}
+.feed{position:absolute;inset:0;filter:blur(1.5px)}
+.topbar{height:56px;background:#fff;border-bottom:1px solid #e3e5e8}
+.col{width:740px;margin:20px auto}.col i{display:block;height:200px;border-radius:16px;background:#fff;margin-bottom:16px}
+.dim{position:absolute;inset:0;background:rgba(14,15,17,.55)}
+.modal{position:absolute;left:50%;top:50%;width:1080px;height:760px;transform:translate(-50%,-50%);border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.close{position:absolute;right:calc(50% - 540px - 52px);top:calc(50% - 380px);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;font:20px/1 Arial;color:#222}
+.embed{width:100%;height:100%}
+/* ---------- Jeu (structure commune) ---------- */
+.game{position:relative;width:100%;height:100%;overflow:hidden;background:var(--floor)}
+.scene{position:absolute;inset:0;width:100%;height:100%}
+.floor{fill:var(--floor)}
+.pool0{stop-color:var(--pool);stop-opacity:var(--pool-a)}.pool1{stop-color:var(--pool);stop-opacity:0}
+.sh{fill:var(--shadow);opacity:var(--shadow-a)}
+.top{stroke:var(--edge);stroke-width:.8;stroke-linejoin:round}
+.groove{stroke:var(--groove);stroke-width:1.1;stroke-linecap:round}
+.pip{fill:var(--pip)}.pip.acc{fill:var(--acc)}.spinner{fill:var(--spinner)}
+.ring{fill:var(--acc);fill-opacity:.12;stroke:var(--acc);stroke-width:1.4;stroke-dasharray:4 4}
+.aimline{stroke:var(--acc);stroke-width:3;stroke-linecap:round}.aimhead{fill:var(--acc)}
+.hud{position:absolute;color:var(--ink)}
+.tl{left:36px;top:30px}.tr{right:36px;top:34px;text-align:right}
+.bc{left:0;right:0;bottom:34px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.mark{font-family:var(--display);font-weight:700;font-size:44px;letter-spacing:-.02em;line-height:1;display:flex;align-items:center}
+.mark b{display:inline-block;width:.56em;height:.56em;border-radius:50%;background:var(--mark-o);margin:0 .05em;position:relative;top:.02em}
+.mark b:first-of-type{background:var(--acc)}
+.date{margin-top:8px;font:var(--small);letter-spacing:var(--small-ls);color:var(--ink-2);text-transform:var(--small-tt)}
+.tally{display:flex;gap:6px;justify-content:flex-end;align-items:flex-end;height:30px}
+.tally i{display:block;border-radius:2px}
+.tally .up{width:8px;height:26px;background:var(--tile);box-shadow:inset 0 0 0 1px var(--tile-edge),2px 2px 0 var(--tile-side)}
+.tally .down{width:20px;height:9px;background:var(--tile);box-shadow:inset 0 0 0 1px var(--tile-edge),0 2px 0 var(--tile-side)}
+.count{margin-top:10px;font:var(--small);letter-spacing:var(--small-ls);color:var(--ink-2);text-transform:var(--small-tt)}
+.count strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.hint{margin:0;font:var(--hint);color:var(--ink);background:var(--chip);padding:8px 16px;border-radius:999px;backdrop-filter:blur(6px)}
+.cta{min-width:220px;height:56px;border:0;border-radius:999px;font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.02em;cursor:pointer;background:var(--cta);color:var(--cta-ink);box-shadow:var(--cta-sh)}
+@media (prefers-reduced-motion:no-preference){.ring{animation:dash 1.6s linear infinite}@keyframes dash{to{stroke-dashoffset:-16}}}
+/* ---------- Direction ---------- */
+.d2 .game{--floor:#e9e2d4;--pool:#ffffff;--pool-a:.6;--shadow:#3a2e20;--shadow-a:.32;--edge:rgba(255,255,255,.32);--groove:#4d463f;--pip:#f0ede6;--acc:#d6402f;--spinner:#9a8f80;
+--ink:#141210;--ink-2:#6d665b;--chip:rgba(240,236,228,.8);--display:"Liberation Sans",Arial,sans-serif;--small:700 12px/1.3 "Liberation Sans",Arial,sans-serif;--small-ls:.12em;--small-tt:uppercase;
+--hint:15px/1.3 "Liberation Sans",Arial,sans-serif;--mark-o:#141210;--tile:#2b2723;--tile-edge:rgba(255,255,255,.18);--tile-side:#0b0a09;
+--cta:#d6402f;--cta-ink:#fff;--cta-sh:0 5px 0 #8f2a1e,0 14px 24px rgba(80,40,20,.25)}
+.d2 .mark{font-size:48px;letter-spacing:-.05em}
+</style></head>
+<body class="d2">
+<div class="wrap"><div class="board">
+  <header class="board-h">
+    <div><small>Dominos · Planche V2 · Page « Jeu » · Direction 02 · desktop 1440 × 900</small><h1>Encre</h1><p>La palette du brief rendue en matière : pièces en laque noire, brillantes sur la tranche, posées sur un plâtre couleur os, sous une lumière douce venue de gauche. Les points blancs comptent le rang de chute, ceux de la pièce poussée sont rouges. Les ombres longues font le motif « en cascade ».</p></div>
+    <div class="sw"><span style="background:#ece6da;color:#141210">ece6da</span><span style="background:#2a2622;color:#f0ede6">2a2622</span><span style="background:#f0ede6;color:#141210">f0ede6</span><span style="background:#d6402f;color:#fff">d6402f</span></div>
+    <button class="zoom" type="button">Taille réelle / ajuster</button>
+  </header>
+  <div class="cap">État : 1 poussée faite, 4 pièces tombées, pièce 5 visée · post ouvert en grand (vue étendue)</div>
+  <div class="screen">
+    <div class="feed"><div class="topbar"></div><div class="col"><i></i><i></i><i></i><i></i></div></div>
+    <div class="dim"></div>
+    <div class="modal"><div class="embed"></div></div>
+    <div class="close">×</div>
+  </div>
+</div></div>
+<script>
+const M = {"lightDir": [-0.707, 0.707], "shadowDir": [0.707, -0.707], "shadowLen": 1.1, "light": null, "lightNear": 0, "lightOff": [0, 0], "blur": 5, "grain": 0.6, "grainTint": 0.25, "grainAlpha": 0.16, "poolAt": ["38%", "30%"], "poolR": "75%", "fill": 0.76, "aspect": 0.7037037037037037, "lift": -0.01, "sel": {"top": "#3a332d"}, "top": "#2b2723", "sideLight": "#1d1a17", "sideDark": "#0b0a09"};
+/* Dominos V2 : scène isométrique, pièces en volume. Données de démo : chaîne #23. */
+const C = 0.866, S = 0.5, T = 9, W = 24, H = 46;
+const toWorld = (sx, sy) => [(sx / C + sy / S) / 2, (sy / S - sx / C) / 2];
+const unit = v => { const l = Math.hypot(v[0], v[1]); return [v[0] / l, v[1] / l]; };
+const dirFromScreen = deg => { const r = deg * Math.PI / 180; return unit(toWorld(Math.cos(r), Math.sin(r))); };
+
+/* Plan en coordonnées écran du sol. 4 -> 5 : trou (la 4 tombe court). 8 : isolée. */
+const PLAN = [[-210,-10],[-172,-30],[-130,-44],[-86,-50],[0,-34],[44,-18],[82,4],[132,70]];
+const AIM_END = [[114,32],[74,80]];
+const P = PLAN.map((q, i) => { const w = toWorld(q[0], q[1]); return { id: i + 1, x: w[0], y: w[1] }; });
+P.forEach((p, i) => {
+  let t;
+  if (i < 6) t = P[i + 1]; else { const w = toWorld(...AIM_END[i - 6]); t = { x: w[0], y: w[1] }; }
+  p.d = unit([t.x - p.x, t.y - p.y]);
+});
+if (M.lightNear) { const q = P[M.lightNear - 1]; M.light = [q.x + M.lightOff[0], q.y + M.lightOff[1]]; }
+
+const hx = c => parseInt(c.slice(1), 16);
+const mix = (a, b, t) => {
+  const A = hx(a), B = hx(b);
+  const ch = s => Math.round(((A >> s) & 255) * (1 - t) + ((B >> s) & 255) * t);
+  return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+};
+const pr = (x, y, z) => [(x - y) * C, (x + y) * S - z];
+const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+
+function box(cx, cy, d, a, b, z1) {
+  const n = [-d[1], d[0]];
+  const at = (sa, sb) => [cx + sa * a * d[0] + sb * b * n[0], cy + sa * a * d[1] + sb * b * n[1]];
+  return { c: [cx, cy], d, n, a, b, z1, f: [at(1, 1), at(1, -1), at(-1, -1), at(-1, 1)] };
+}
+function hull(points) {
+  const p = points.slice().sort((u, v) => u[0] - v[0] || u[1] - v[1]);
+  const cr = (o, u, v) => (u[0] - o[0]) * (v[1] - o[1]) - (u[1] - o[1]) * (v[0] - o[0]);
+  const lo = [], up = [];
+  for (const q of p) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+  for (const q of p.slice().reverse()) { while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+  return lo.slice(0, -1).concat(up.slice(0, -1));
+}
+function shadowOf(B, M) {
+  const sv = M.light ? unit([B.c[0] - M.light[0], B.c[1] - M.light[1]]) : M.shadowDir;
+  const len = B.z1 * M.shadowLen;
+  const foot = B.f.concat(B.f.map(q => [q[0] + sv[0] * len, q[1] + sv[1] * len]));
+  return `<polygon class="sh" points="${pts(hull(foot).map(q => pr(q[0], q[1], 0)))}"/>`;
+}
+function faces(B, M, opt) {
+  const L = M.lightDir; let s = '';
+  const sides = [[0, 1, B.d], [2, 3, [-B.d[0], -B.d[1]]], [1, 2, [-B.n[0], -B.n[1]]], [3, 0, B.n]];
+  for (const [i, j, nn] of sides) {
+    if (nn[0] + nn[1] <= 0.001) continue;
+    const t = Math.max(0, Math.min(1, 0.5 - 0.5 * (nn[0] * L[0] + nn[1] * L[1])));
+    const q = [B.f[i], B.f[j]];
+    s += `<polygon fill="${mix(M.sideLight, M.sideDark, t)}" points="${pts([pr(q[0][0], q[0][1], 0), pr(q[1][0], q[1][1], 0), pr(q[1][0], q[1][1], B.z1), pr(q[0][0], q[0][1], B.z1)])}"/>`;
+    if (opt.groove && Math.abs(nn[0] - B.d[0]) + Math.abs(nn[1] - B.d[1]) < 0.01 || opt.groove && Math.abs(nn[0] + B.d[0]) + Math.abs(nn[1] + B.d[1]) < 0.01) {
+      const m = [(q[0][0] + q[1][0]) / 2, (q[0][1] + q[1][1]) / 2];
+      const k = 0.8;
+      const e0 = [m[0] + (q[0][0] - m[0]) * k, m[1] + (q[0][1] - m[1]) * k], e1 = [m[0] + (q[1][0] - m[0]) * k, m[1] + (q[1][1] - m[1]) * k];
+      s += `<line class="groove" x1="${pr(...e0, B.z1 / 2)[0].toFixed(1)}" y1="${pr(...e0, B.z1 / 2)[1].toFixed(1)}" x2="${pr(...e1, B.z1 / 2)[0].toFixed(1)}" y2="${pr(...e1, B.z1 / 2)[1].toFixed(1)}"/>`;
+    }
+  }
+  s += `<polygon class="top" fill="${M.top}" points="${pts(B.f.map(q => pr(q[0], q[1], B.z1)))}"/>`;
+  return s;
+}
+const GRID = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [-1, 1], [1, -1], [1, 1]],
+  5: [[-1, -1], [-1, 1], [1, -1], [1, 1], [0, 0]], 6: [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1]],
+  7: [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1], [0, 0]],
+  8: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]] };
+function pips(B, n, cls) {
+  const g = W * 0.27, r = W * 0.1, cen = B.a / 2; let s = '';
+  const disc = (u, v) => {
+    const ring = [];
+    for (let k = 0; k < 14; k++) {
+      const t = k / 14 * Math.PI * 2, uu = u + Math.cos(t) * r, vv = v + Math.sin(t) * r;
+      ring.push(pr(B.c[0] + uu * B.d[0] + vv * B.n[0], B.c[1] + uu * B.d[1] + vv * B.n[1], B.z1));
+    }
+    return `<polygon class="${cls}" points="${pts(ring)}"/>`;
+  };
+  for (const [i, j] of GRID[n]) s += disc(cen + i * g, j * g);
+  const e0 = [B.c[0] + B.n[0] * B.b * 0.8, B.c[1] + B.n[1] * B.b * 0.8], e1 = [B.c[0] - B.n[0] * B.b * 0.8, B.c[1] - B.n[1] * B.b * 0.8];
+  const a0 = pr(...e0, B.z1), a1 = pr(...e1, B.z1);
+  s += `<line class="groove" x1="${a0[0].toFixed(1)}" y1="${a0[1].toFixed(1)}" x2="${a1[0].toFixed(1)}" y2="${a1[1].toFixed(1)}"/>`;
+  return s + disc(0, 0).replace(cls, 'spinner');
+}
+function aim(p, M) {
+  const d = p.d, ring = [];
+  for (let k = 0; k < 40; k++) { const t = k / 40 * Math.PI * 2; ring.push(pr(p.x + Math.cos(t) * 30, p.y + Math.sin(t) * 30, 0)); }
+  const A = pr(p.x - d[0] * 64, p.y - d[1] * 64, 0), Bp = pr(p.x - d[0] * 20, p.y - d[1] * 20, 0);
+  const tip = pr(p.x - d[0] * 11, p.y - d[1] * 11, 0), n = [-d[1], d[0]];
+  const l = pr(p.x - d[0] * 22 + n[0] * 7, p.y - d[1] * 22 + n[1] * 7, 0), r = pr(p.x - d[0] * 22 - n[0] * 7, p.y - d[1] * 22 - n[1] * 7, 0);
+  return { under: `<polygon class="ring" points="${pts(ring)}"/>`,
+    over: `<line class="aimline" x1="${A[0].toFixed(1)}" y1="${A[1].toFixed(1)}" x2="${Bp[0].toFixed(1)}" y2="${Bp[1].toFixed(1)}"/><polygon class="aimhead" points="${pts([tip, l, r])}"/>` };
+}
+function scene(St, M) {
+  const items = P.map(p => {
+    const down = St.down[p.id];
+    const B = down ? box(p.x + p.d[0] * (H / 2 - T / 2), p.y + p.d[1] * (H / 2 - T / 2), p.d, H / 2, W / 2, T)
+                   : box(p.x, p.y, p.d, T / 2, W / 2, H);
+    return { p, B, down, depth: B.c[0] + B.c[1] + (down ? 0 : 1) };
+  }).sort((u, v) => u.depth - v.depth);
+  const all = items.flatMap(it => it.B.f.map(q => pr(q[0], q[1], 0)).concat(it.B.f.map(q => pr(q[0], q[1], it.B.z1))));
+  const xs = all.map(q => q[0]), ys = all.map(q => q[1]);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+  const vw = (Math.max(...xs) - Math.min(...xs)) / M.fill, vh = vw * M.aspect;
+  const vb = [cx - vw / 2, cy - vh / 2 + M.lift * vh, vw, vh];
+  const tgt = St.target ? aim(P[St.target - 1], M) : { under: '', over: '' };
+  let s = `<svg class="scene" viewBox="${vb.map(v => v.toFixed(1)).join(' ')}" preserveAspectRatio="xMidYMid slice">` +
+    `<defs><filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${M.blur}"/></filter>` +
+    `<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="${M.grain}" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 ${M.grainTint} 0 0 0 0 ${M.grainTint} 0 0 0 0 ${M.grainTint} 0 0 0 ${M.grainAlpha} 0"/></filter>` +
+    (M.poolOnTarget && St.target ? (() => { const q = pr(P[St.target - 1].x, P[St.target - 1].y, 0); return `<radialGradient id="pool" gradientUnits="userSpaceOnUse" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${(vw * 0.42).toFixed(1)}">`; })() : `<radialGradient id="pool" cx="${M.poolAt[0]}" cy="${M.poolAt[1]}" r="${M.poolR}">`) + `<stop offset="0" class="pool0"/><stop offset="1" class="pool1"/></radialGradient></defs>` +
+    `<rect class="floor" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}"/>` +
+    `<rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" filter="url(#grain)"/>` +
+    `<rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="url(#pool)"/>`;
+  s += `<g filter="url(#blur)">${items.map(it => shadowOf(it.B, M)).join('')}</g>` + tgt.under;
+  for (const it of items) {
+    const sel = St.target === it.p.id;
+    const mat = sel ? Object.assign({}, M, M.sel) : M;
+    s += `<g class="tile${sel ? ' sel' : ''}">` + faces(it.B, mat, { groove: !it.down });
+    if (it.down) s += pips(it.B, it.down, St.pushed.includes(it.p.id) ? 'pip acc' : 'pip');
+    s += '</g>';
+  }
+  return s + tgt.over + '</svg>';
+}
+function tally(St) {
+  const n = Object.keys(St.down).length;
+  return Array.from({ length: 8 }, (_, i) => `<i class="${i < n ? 'down' : 'up'}"></i>`).join('');
+}
+function game(St, M) {
+  const n = Object.keys(St.down).length;
+  return `<div class="game">${scene(St, M)}
+    <div class="hud tl"><div class="mark">D<b></b>MIN<b></b>S</div><div class="date">Chain&nbsp;#23 · Wednesday, November&nbsp;18</div></div>
+    <div class="hud tr"><div class="tally">${tally(St)}</div><div class="count"><strong>${n}</strong> of 8 down · ${St.pushed.length} push</div></div>
+    <div class="hud bc"><p class="hint">${St.hint}</p><button class="cta">${St.cta}</button></div></div>`;
+}
+const STATE = { down: { 1: 1, 2: 2, 3: 3, 4: 4 }, pushed: [1], target: 5,
+  hint: 'Piece 5 is aimed. The arrow shows where it will fall.', cta: 'Push' };
+document.querySelector('.embed').innerHTML = game(STATE, M);
+
+function fit() {
+  const b = document.querySelector('.board'), w = document.querySelector('.wrap');
+  const s = document.body.classList.contains('real') ? 1 : Math.min(1, (innerWidth - 32) / b.offsetWidth);
+  b.style.transform = `scale(${s})`;
+  w.style.height = (b.offsetHeight * s) + 'px';
+}
+document.querySelector('.zoom').onclick = () => { document.body.classList.toggle('real'); fit(); };
+addEventListener('resize', fit); fit();
+
+</script>
+</body></html>

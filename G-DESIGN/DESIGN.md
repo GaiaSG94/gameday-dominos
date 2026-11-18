@@ -24,3 +24,26 @@
 - Aucune limite de poussées affichée : non définie dans `IDEE.md` (question ouverte n° 1).
 
 **En attente** : choix de la direction par Gaia, réponses aux questions de `PAGES.md`, adresse de la référence Sponge.
+
+## V2 — 2026-11-18 · Refonte après retour de Gaia
+
+**Retour Gaia sur V1** : « slop IA », matière, couleurs et motifs non travaillés, pas d'identité visuelle ; mobile inutile sauf si le hackathon le demande ; aller voir les jeux de référence.
+
+**Constats**
+- Les V1 ressemblaient à un tableau de bord : un rectangle plat par pièce, un panneau de stats, une bande de cases. C'était de l'UI, pas un jeu.
+- Le hackathon ne demande pas de mobile (page Devpost relue). Le « mobile first » venait d'`IDEE.md`, pas du règlement.
+- Les jeux primés (voir `REFS.md`, section « Jeux de référence ») tiennent par un monde et un objet, avec très peu d'UI.
+
+**Livré** (`planches/v2/`, desktop 1440 × 900 seul, post ouvert en grand au-dessus du feed)
+- `01-cafe.html` : feutre vert, pièces en os ivoire, points noirs, pivot en laiton, titre en serif.
+- `02-encre.html` : la palette du brief en matière. Laque noire sur plâtre os, points blancs, rouge pour la pièce poussée, ombres longues.
+- `03-nuit.html` : salle noire, une lampe sur la prochaine poussée, ombres qui partent de la lampe, accent ambre.
+
+**Décisions**
+- Pièces dessinées en vrai volume (isométrie : dessus, deux tranches, rainure, pivot, points), ombres portées floues, grain de surface (bruit SVG, zéro fichier externe).
+- **Motif central** : une pièce tombée montre sa face, et ses points comptent son rang de chute (1 à 8, grille de double-neuf). La pièce poussée a ses points en couleur d'accent.
+- Logo « D●MIN●S » : les deux O sont des points de domino, le premier en accent.
+- Pendant le jeu, seulement : logo + date (haut gauche), compteur de pièces debout/couchées (haut droite), consigne + bouton Push (bas).
+- V1 conservée telle quelle (`planches/v1/`), jamais écrasée.
+
+**En attente** : choix de la direction, questions de `PAGES.md`, adresse Sponge.
