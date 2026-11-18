@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dominos · Jeu · 02 Galerie</title>
+<style>
+/* ---------- Planche (hors produit) ---------- */
+*{box-sizing:border-box}
+html,body{margin:0;background:#cfccc6;font-family:"Liberation Sans",Arial,sans-serif;color:#1a1a1b}
+.wrap{padding:16px;overflow:hidden}
+body.real .wrap{overflow:visible}
+.board{transform-origin:0 0;width:max-content;background:#fbfaf8;padding:40px 48px 48px;border-radius:6px}
+.board-h{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:40px;align-items:end;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #e2dfda}
+.board-h small{font:600 12px/1.4 "DejaVu Sans Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8b867d}
+.board-h h1{margin:6px 0 8px;font-size:40px;letter-spacing:-.02em}
+.board-h p{margin:0;font-size:15px;line-height:1.45;color:#45423d;max-width:620px}
+.sw{display:flex;gap:8px}.sw span{width:64px;height:64px;border-radius:4px;display:flex;align-items:flex-end;padding:5px;font:11px "DejaVu Sans Mono",monospace;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.specimen{font-size:13px;color:#45423d;line-height:1.5}
+.zoom{font:600 12px "DejaVu Sans Mono",monospace;border:1px solid #c9c5be;background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer}
+.frames{display:flex;gap:48px;align-items:flex-start}
+.cap{font:600 12px "DejaVu Sans Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8b867d;margin-bottom:10px}
+.screen{position:relative;overflow:hidden;background:#eef0f2;box-shadow:0 1px 0 rgba(0,0,0,.05),0 18px 40px rgba(0,0,0,.12)}
+.phone{border-radius:28px;display:flex;flex-direction:column;background:#fff}
+/* ---------- Contexte du feed (neutre, pas de thème Reddit) ---------- */
+.topbar{height:56px;background:#fff;border-bottom:1px solid #e3e5e8;display:flex;align-items:center;gap:24px;padding:0 24px}
+.logo-ph{width:32px;height:32px;border-radius:50%;background:#d8dbdf}
+.search{flex:0 0 560px;margin-left:220px;height:40px;border-radius:999px;background:#eef0f2;color:#80858c;font-size:14px;display:flex;align-items:center;padding:0 18px}
+.tb-r{margin-left:auto;display:flex;gap:12px}.tb-r span{width:32px;height:32px;border-radius:50%;background:#d8dbdf}
+.cols{display:grid;grid-template-columns:272px 740px 316px;gap:24px;justify-content:center;padding-top:20px}
+.rail{display:flex;flex-direction:column;gap:14px;padding:8px 16px}.rail i{display:block;height:10px;border-radius:5px;background:#dcdfe3}
+.post{background:#fff;border-radius:16px;padding:12px 16px 8px}
+.ph{display:flex;align-items:center;gap:8px;font-size:12px;color:#5c6066}
+.ph b{color:#1a1a1b}.cav{width:24px;height:24px;border-radius:50%;background:#141210}
+.ptitle{font-size:18px;margin:8px 0 10px;font-weight:600}
+.embed{border-radius:12px;overflow:hidden}
+.desk .embed{height:540px}
+.actions{display:flex;gap:10px;padding:10px 0 4px;font-size:12px;font-weight:600;color:#3c3f44}
+.actions span{background:#eef0f2;border-radius:999px;padding:8px 12px;display:flex;align-items:center;gap:6px}
+.actions svg{width:14px;height:14px;fill:none;stroke:#3c3f44;stroke-width:2}
+.side .card{background:#fff;border-radius:16px;padding:16px;font-size:13px;line-height:1.45;color:#3c3f44}
+.side .card b{display:block;font-size:14px;color:#1a1a1b;margin-bottom:6px}
+.side .card i{display:block;height:10px;border-radius:5px;background:#e3e5e8;margin-top:10px}
+.ghost{margin-top:16px;height:120px}
+.status{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font-size:15px}
+.status span{width:56px;height:12px;border-radius:3px;background:#1a1a1b;opacity:.85}
+.appbar{height:48px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid #eceef0;font-size:15px}
+.appbar em{font-style:normal;font-size:22px;color:#5c6066}
+.mob .ph{padding:10px 16px 0}.mob .ptitle{font-size:16px;padding:0 16px;margin:6px 0 10px}
+.mob .embed{flex:1;border-radius:0;min-height:0}
+.mob .actions{padding:8px 16px 18px}
+/* ---------- Structure du jeu (commune) ---------- */
+.game{position:relative;width:100%;height:100%;display:grid;overflow:hidden;background:var(--g-bg);color:var(--g-ink);font-family:var(--g-font)}
+.game.wide{grid-template-columns:1fr 280px;grid-template-rows:auto 1fr}
+.game.wide .hud{grid-column:1/-1}
+.game.tall{grid-template-rows:auto minmax(0,1fr) auto}
+.hud{display:flex;justify-content:space-between;align-items:baseline;padding:16px 20px 4px}
+.stage{min-height:0;min-width:0;display:flex;align-items:center;justify-content:center;padding:4px 12px}
+.field{width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:12px;padding:4px 20px 20px}
+.game.wide .panel{justify-content:flex-end;padding:0 24px 24px 0}
+.stats{display:flex;gap:24px;align-items:flex-end}
+.stat{display:flex;align-items:baseline;gap:4px}.stat b,.stat i{font-style:normal;font-variant-numeric:tabular-nums}
+.stat small,.lab{display:block}
+.seq{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;list-style:none;margin:6px 0 0;padding:0}
+.seq li{position:relative;height:32px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.hint{margin:0}
+.cta{width:100%;height:48px;border:0;cursor:pointer;font-family:inherit}
+.num{text-anchor:middle}
+.ring{fill:none}
+.game.wide .panel .stats{margin-bottom:8px}
+/* ---------- Direction ---------- */
+.d2 .game{--g-bg:#ebe8e1;--g-ink:#1c1b19;--acc:#2b46c8;--g-mute:#8d8981;--g-font:"Nimbus Sans Narrow","Arial Narrow","Liberation Sans Narrow",sans-serif;--mono:"DejaVu Sans Mono",ui-monospace,monospace}
+.d2 .cav{background:#2b46c8}
+.d2 .stage{background:radial-gradient(ellipse 70% 60% at 50% 58%,#f7f5f0 0%,#ebe8e1 75%)}
+.d2 .field{transform:perspective(900px) rotateX(26deg) scale(.9);transform-origin:50% 50%}
+.d2 .brand{font-weight:700;font-size:24px;text-transform:uppercase;letter-spacing:.02em}
+.d2 .meta{font:11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--g-mute)}
+.d2 .meta b{color:var(--g-ink);font-weight:400}
+.d2 .dot{fill:none}
+.d2 .spot0{stop-color:#fff;stop-opacity:.95}.d2 .spot1{stop-color:#fff;stop-opacity:0}
+.d2 .shadow{fill:#2a241a;opacity:.32}
+.d2 .stand,.d2 .fall{fill:#fbfaf6;stroke:#e1dcd1;stroke-width:.6}
+.d2 .stand.side,.d2 .fall.side{fill:#c9c2b4;stroke:none}
+.d2 .stand.sel{fill:#4a63e0;stroke:none}.d2 .stand.sel.side{fill:#1f349c}
+.d2 .num{fill:var(--g-ink);font:11px var(--mono)}
+.d2 .pmark{fill:var(--acc)}
+.d2 .ring{stroke:var(--acc);stroke-width:1}
+.d2 .push{stroke:var(--acc);stroke-width:2}.d2 .head{fill:var(--acc)}
+.d2 .stat b{font-weight:700;font-size:32px;line-height:.9}
+.d2 .stat.big b{font-size:80px;line-height:.8}
+.d2 .stat i{font-weight:700;font-size:30px;color:var(--g-mute)}
+.d2 .stat small,.d2 .lab{font:10.5px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--g-mute);margin-left:6px}
+.d2 .seq li{border-radius:14px 14px 3px 3px;background:#e2ded5;font:12px var(--mono);color:var(--g-ink)}
+.d2 .seq li.on{background:#fbfaf6;box-shadow:0 6px 12px rgba(42,36,26,.14)}
+.d2 .seq li.ps::after{content:"";position:absolute;bottom:-7px;left:25%;right:25%;height:2px;background:var(--acc)}
+.d2 .hint{font:12px/1.55 var(--mono);color:#55524c}
+.d2 .cta{border-radius:999px;background:var(--g-ink);color:#fff;font:12px var(--mono);letter-spacing:.22em;text-transform:uppercase;height:46px}
+.d2 .cta.off{background:transparent;color:var(--g-mute);border:1px solid #c9c4b9}
+</style></head>
+<body class="d2">
+<div class="wrap"><div class="board">
+  <header class="board-h">
+    <div><small>Dominos · Planche V1 · Page « Jeu » · Direction 02</small><h1>Galerie</h1><p>Les pièces deviennent des objets ivoire posés sur un sol éclairé, vus de trois-quarts. Une flaque de lumière marque ce qui tient encore debout ; la typo reste discrète (capitales étroites + mono). Principe pris chez Shutabug : l'objet et la lumière qui le sculpte.</p></div>
+    <div class="sw"><span style="background:#ebe8e1;color:#1c1b19">ebe8e1</span><span style="background:#fbfaf6;color:#1c1b19">fbfaf6</span><span style="background:#1c1b19;color:#fff">1c1b19</span><span style="background:#2b46c8;color:#fff">2b46c8</span></div>
+    <div class="specimen"><b style="font:700 30px/1 'Nimbus Sans Narrow','Arial Narrow',sans-serif;text-transform:uppercase">4/8 down</b><br><span style="font:11px 'DejaVu Sans Mono',monospace;letter-spacing:.18em">CHAIN #23 · NOV 18</span><br>Capitales étroites + mono espacée</div>
+    <button class="zoom" type="button">Taille réelle / ajuster</button>
+  </header>
+  <div class="frames">
+    <section class="desk"><div class="cap">Desktop · 1440 × 900 · état : 1 poussée, pièce 5 visée</div>
+      <div class="screen" style="width:1440px;height:900px">
+        <div class="topbar"><span class="logo-ph"></span><span class="search">Search</span><span class="tb-r"><span></span><span></span></span></div>
+        <div class="cols">
+          <nav class="rail"><i style="width:70%"></i><i style="width:55%"></i><i style="width:62%"></i><i style="width:48%"></i><i style="width:66%"></i></nav>
+          <main><article class="post">
+            <div class="ph"><span class="cav"></span><b>r/dominos_daily</b><span>· 2 h</span></div>
+            <h2 class="ptitle">Daily chain #23 · can you topple all eight?</h2>
+            <div class="embed"></div>
+            <div class="actions"><span><svg viewBox="0 0 14 14"><path d="M3 8l4-5 4 5M7 3v9"/></svg>412<svg viewBox="0 0 14 14"><path d="M3 6l4 5 4-5M7 11V2"/></svg></span><span><svg viewBox="0 0 14 14"><path d="M2 3h10v7H6l-3 2v-2H2z"/></svg>58</span><span><svg viewBox="0 0 14 14"><path d="M8 2l4 4-4 4M12 6H5a3 3 0 0 0-3 3v2"/></svg>Share</span></div>
+          </article><div class="post ghost"></div></main>
+          <aside class="side"><div class="card"><b>r/dominos_daily</b>One chain a day, the same for everyone.<i style="width:80%"></i><i style="width:60%"></i></div></aside>
+        </div>
+      </div></section>
+    <section class="mob"><div class="cap">Mobile · 390 × 844 · état : 2 poussées, 7/8</div>
+      <div class="screen phone" style="width:390px;height:844px">
+        <div class="status"><b>9:41</b><span></span></div>
+        <div class="appbar"><em>‹</em><b>r/dominos_daily</b></div>
+        <div class="ph"><span class="cav"></span><b>r/dominos_daily</b><span>· 2 h</span></div>
+        <h2 class="ptitle">Daily chain #23 · can you topple all eight?</h2>
+        <div class="embed"></div>
+        <div class="actions"><span><svg viewBox="0 0 14 14"><path d="M3 8l4-5 4 5M7 3v9"/></svg>412<svg viewBox="0 0 14 14"><path d="M3 6l4 5 4-5M7 11V2"/></svg></span><span><svg viewBox="0 0 14 14"><path d="M2 3h10v7H6l-3 2v-2H2z"/></svg>58</span><span><svg viewBox="0 0 14 14"><path d="M8 2l4 4-4 4M12 6H5a3 3 0 0 0-3 3v2"/></svg>Share</span></div>
+      </div></section>
+  </div>
+</div></div>
+<script>
+const OPTS = {"brand": "Dominos", "rx": 2, "lift": 7, "liftDown": 3, "cascade": 0, "step": 0, "shadow": 5, "blur": true, "spots": true, "links": false};
+/* Données de démo : chaîne #23 (8 pièces). hit = la pièce atteint bien sa voisine. */
+const P = [
+  {id:1,x:56,y:318,to:2,hit:true},{id:2,x:98,y:292,to:3,hit:true},
+  {id:3,x:142,y:268,to:4,hit:true},{id:4,x:186,y:242,to:5,hit:false},
+  {id:5,x:248,y:196,to:6,hit:true},{id:6,x:276,y:150,to:7,hit:true},
+  {id:7,x:286,y:98,dir:-100},{id:8,x:132,y:140,dir:215}
+];
+const byId = Object.fromEntries(P.map(p => [p.id, p]));
+const UP = [-5,-17,10,34], DOWN = [-4,-16,46,32];
+const f = n => n.toFixed(1);
+
+function dirOf(p) {
+  if (!p.to) return p.dir;
+  const q = byId[p.to];
+  return Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+}
+function vec(p) { const r = dirOf(p) * Math.PI / 180; return [Math.cos(r), Math.sin(r)]; }
+function rectAt(x, y, a, r, cls, O, extra) {
+  return `<rect class="${cls}" x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" rx="${O.rx}" transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})" ${extra||''}/>`;
+}
+function block(p, r, base, O) {
+  const a = dirOf(p), L = r === UP ? O.lift : O.liftDown;
+  let s = '';
+  for (let k = 0; k < L; k++) s += rectAt(p.x, p.y - k, a, r, base + ' side', O);
+  return s + rectAt(p.x, p.y - L, a, r, base, O);
+}
+function pieceShadow(p, S, O) {
+  const a = dirOf(p), down = S.down[p.id];
+  let s = '';
+  if (down) for (let k = O.cascade; k > 0; k--)
+    s += rectAt(p.x + k*O.step, p.y + k*O.step, a, DOWN, 'echo e' + k, O);
+  if (O.shadow) s += rectAt(p.x + O.shadow, p.y + O.shadow, a, down ? DOWN : UP, 'shadow', O, O.blur ? `filter="url(#bl${S.k})"` : '');
+  return s;
+}
+function pieceBody(p, S, O) {
+  const n = S.down[p.id], [c, si] = vec(p);
+  if (!n) return block(p, UP, 'stand' + (S.target === p.id ? ' sel' : ''), O);
+  let s = block(p, DOWN, 'fall', O);
+  const tx = p.x + c*19, ty = p.y + si*19 - O.liftDown;
+  s += `<text class="num" x="${f(tx)}" y="${f(ty + 4.5)}">${n}</text>`;
+  if (S.pushed.includes(p.id))
+    s += `<circle class="pmark" cx="${f(p.x - c*12)}" cy="${f(p.y - si*12 - O.liftDown)}" r="3.5"/>`;
+  return s;
+}
+function targetMark(p, O) {
+  const [c, si] = vec(p), y = p.y - O.lift/2;
+  const x1 = p.x - c*17, y1 = y - si*17, x0 = p.x - c*52, y0 = y - si*52;
+  const bx = x1 - c*9, by = y1 - si*9;
+  return `<circle class="ring" cx="${p.x}" cy="${f(y)}" r="28"/>` +
+    `<line class="push" x1="${f(x0)}" y1="${f(y0)}" x2="${f(bx)}" y2="${f(by)}"/>` +
+    `<polygon class="head" points="${f(x1)},${f(y1)} ${f(bx - si*6)},${f(by + c*6)} ${f(bx + si*6)},${f(by - c*6)}"/>`;
+}
+function links(S) {
+  return P.filter(p => p.to && p.hit && S.down[p.id] && S.down[p.to]).map(p => {
+    const q = byId[p.to];
+    return `<line class="link" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`;
+  }).join('');
+}
+function field(S, O) {
+  let s = `<svg viewBox="24 58 292 300" class="field" preserveAspectRatio="xMidYMid meet"><defs>` +
+    `<radialGradient id="sp${S.k}"><stop offset="0" class="spot0"/><stop offset="1" class="spot1"/></radialGradient>` +
+    `<pattern id="dt${S.k}" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" class="dot"/></pattern>` +
+    `<filter id="bl${S.k}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs>` +
+    `<rect x="-200" y="-200" width="800" height="800" fill="url(#dt${S.k})"/>`;
+  if (O.spots) s += P.filter(p => !S.down[p.id]).map(p => `<ellipse cx="${p.x}" cy="${p.y + 2}" rx="46" ry="32" fill="url(#sp${S.k})"/>`).join('');
+  if (O.links) s += links(S);
+  const order = [...P].sort((a, b) => a.y - b.y);
+  s += order.map(p => pieceShadow(p, S, O)).join('');
+  s += order.map(p => pieceBody(p, S, O)).join('');
+  if (S.target) s += targetMark(byId[S.target], O);
+  return s + '</svg>';
+}
+function game(S, O, layout) {
+  const n = Object.keys(S.down).length, np = S.pushed.length;
+  const seq = Array.from({length: 8}, (_, i) => {
+    const k = i + 1, on = k <= n, ps = S.pushStarts.includes(k);
+    return `<li class="${on ? 'on' : ''}${ps ? ' ps' : ''}">${on ? k : ''}</li>`;
+  }).join('');
+  return `<div class="game ${layout}">
+    <header class="hud"><span class="brand">${O.brand}</span><span class="meta">Chain <b>#23</b> · Wed, Nov 18</span></header>
+    <div class="stage">${field(S, O)}</div>
+    <div class="panel">
+      <div class="stats"><div class="stat big"><b>${n}</b><i>/8</i><small>down</small></div>
+      <div class="stat"><b>${np}</b><small>${np === 1 ? 'push' : 'pushes'}</small></div></div>
+      <div class="seqwrap"><small class="lab">Fall order</small><ol class="seq">${seq}</ol></div>
+      <p class="hint">${S.hint}</p>
+      <button class="cta${S.target ? '' : ' off'}">${S.cta}</button>
+    </div></div>`;
+}
+const DESK = {k:'d', down:{1:1,2:2,3:3,4:4}, pushed:[1], pushStarts:[1], target:5,
+  hint:'Tap a standing piece to aim, then push. Topple all eight.', cta:'Push'};
+const MOB = {k:'m', down:{1:1,2:2,3:3,4:4,5:5,6:6,7:7}, pushed:[1,5], pushStarts:[1,5], target:null,
+  hint:'One piece still standing.', cta:'Tap a piece to aim'};
+document.querySelector('.desk .embed').innerHTML = game(DESK, OPTS, 'wide');
+document.querySelector('.mob .embed').innerHTML = game(MOB, OPTS, 'tall');
+
+function fit() {
+  const b = document.querySelector('.board'), w = document.querySelector('.wrap');
+  const s = document.body.classList.contains('real') ? 1 : Math.min(1, (innerWidth - 32) / b.offsetWidth);
+  b.style.transform = `scale(${s})`;
+  w.style.height = (b.offsetHeight * s) + 'px';
+}
+document.querySelector('.zoom').onclick = () => { document.body.classList.toggle('real'); fit(); };
+addEventListener('resize', fit); fit();
+
+</script>
+</body></html>
