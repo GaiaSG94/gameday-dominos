@@ -1,5 +1,6 @@
 # STYLE — Dominos · direction « Encre »
 
+> **VERROUILLÉ le 2026-11-18 (/lock)** : fin des explorations, toute modification passe par `/delta`.
 > Validée par Gaia le 2026-11-18 (planche `planches/v2/02-encre.html`). Source unique du style pour toutes les pages.
 > Périmètre : desktop seul (1440 × 900). Aucune version mobile tant que le hackathon ne la demande pas.
 

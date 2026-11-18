@@ -1,3 +1,3 @@
 # DESIGN - gameday-dominos
 
-Journal de design : voir [G-DESIGN/DESIGN.md](G-DESIGN/DESIGN.md) (V1 du 2026-11-18 : 3 directions pour la page Jeu, en attente de validation).
+Design **verrouille le 2026-11-18** (style Encre). Journal : [G-DESIGN/DESIGN.md](G-DESIGN/DESIGN.md) · style : [G-DESIGN/STYLE.md](G-DESIGN/STYLE.md) · ecrans : `G-DESIGN/planches/v2/encre/`.

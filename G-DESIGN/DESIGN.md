@@ -65,3 +65,14 @@
 **Données de démo** (inventées pour la planche, à remplacer par les vraies) : 1 284 joueurs, 61 % à 8/8, répartition 9 / 34 / 31 / 17 / 9 %, série 7 jours, record 12, 23 chaînes jouées.
 
 **En attente** : validation des 3 pages, questions de `PAGES.md` (limite de poussées, valeur du résultat, règle de classement), adresse Sponge. `/lock` possible une fois les 4 pages validées.
+
+## LOCK — 2026-11-18
+
+**Décision Gaia** : les 4 pages sont validées (Jeu, Post, Carte de fin, Séries & classement) et le style Encre est **verrouillé**. Fin des explorations.
+
+**Référence pour l'implémentation** (prompt 07b)
+- Style : `STYLE.md`
+- Écrans : `planches/v2/encre/01-jeu.html` … `04-series.html` (desktop 1440 × 900)
+- Les explorations V1 et V2 (`planches/v1/`, `planches/v2/0*.html`) restent archivées et ne servent plus de référence.
+
+**À trancher avant le code** (`PAGES.md`) : limite de poussées, valeur du résultat, règle de classement, et ouverture en vue étendue (hypothèse dessinée : splash dans le feed + jeu en vue étendue). Les chiffres de démo sont à remplacer par les vraies données (Redis).
