@@ -47,3 +47,21 @@
 - V1 conservée telle quelle (`planches/v1/`), jamais écrasée.
 
 **En attente** : choix de la direction, questions de `PAGES.md`, adresse Sponge.
+
+## V2.1 — 2026-11-18 · Style Encre validé, déclinaison des pages
+
+**Décision Gaia** : direction **02 Encre** retenue (pièces noires sur fond blanc cassé).
+
+**Livré**
+- `STYLE.md` : palette hex, matière et lumière, anatomie de la pièce, typographie, grille, composants, mouvement, états.
+- `planches/v2/encre/` : `01-jeu.html` (copie de la planche validée), `02-post.html`, `03-fin.html`, `04-series.html`, en desktop 1440 × 900.
+
+**Décisions**
+- **Post** : la chaîne du jour est debout, intacte. Tout ce qu'il faut pour décider de jouer est sur l'image (nom, date, règle en une phrase, joueurs du jour, série), avec un seul bouton.
+- **Carte de fin** : la carte est une pièce géante en laque. Résultat en haut, série en bas, rainure et pivot au milieu. La scène reste visible, avec les 8 faces et les 3 poussées en rouge. L'action principale est un commentaire déjà écrit, à poster en un geste.
+- **Séries & classement** : on montre une **répartition** (poussées utilisées par les joueurs qui ont tout fait tomber), pas un classement nominatif, car la règle de classement n'est pas définie (question n° 3).
+- Les mini-pièces servent partout de pictogramme : compteur, série, calendrier, graphique.
+
+**Données de démo** (inventées pour la planche, à remplacer par les vraies) : 1 284 joueurs, 61 % à 8/8, répartition 9 / 34 / 31 / 17 / 9 %, série 7 jours, record 12, 23 chaînes jouées.
+
+**En attente** : validation des 3 pages, questions de `PAGES.md` (limite de poussées, valeur du résultat, règle de classement), adresse Sponge. `/lock` possible une fois les 4 pages validées.

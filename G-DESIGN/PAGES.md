@@ -5,10 +5,10 @@
 
 | # | Page | Rôle | Contenu clé | Statut |
 |---|------|------|-------------|--------|
-| 1 | **Jeu** (page principale) | Jouer la chaîne du jour ; une seule règle lisible en 5 s | Champ des 8 pièces, pièce visée + sens de poussée, compteur « x/8 down », nombre de poussées, ordre de chute (8 cases), consigne, bouton Push | En revue (V2 : 3 directions matière, desktop seul) |
+| 1 | **Jeu** (page principale) | Jouer la chaîne du jour ; une seule règle lisible en 5 s | Scène des 8 pièces, pièce visée + flèche au sol, compteur en mini-pièces, nombre de poussées, consigne, bouton Push | **Validée** (Encre, 2026-11-18) · `planches/v2/encre/01-jeu.html` |
 | 2 | **Post** | État du post dans le feed avant d'y toucher | En-tête de post, titre du jour (#n + date), aperçu figé de la chaîne, appel « Play » | À dessiner |
-| 3 | **Carte de fin** | Clore la partie et donner envie de revenir / commenter | Résultat (x/8, poussées), série (streak), invitation à commenter en un geste | À dessiner |
-| 4 | **Séries & classement** | Montrer la communauté | Série personnelle, scores de la communauté sur la chaîne du jour | À dessiner |
+| 3 | **Carte de fin** | Clore la partie et donner envie de revenir / commenter | Résultat (x/8, poussées, ordre), série, commentaire pré-rempli en un geste, compte à rebours | En revue · `planches/v2/encre/03-fin.html` |
+| 4 | **Séries & classement** | Montrer la communauté | Série + calendrier 4 semaines, joueurs du jour, % qui ont tout fait tomber, répartition des poussées | En revue · `planches/v2/encre/04-series.html` |
 
 ## Questions produit ouvertes (non tranchées, absentes de `IDEE.md`)
 
