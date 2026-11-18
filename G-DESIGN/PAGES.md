@@ -1,14 +1,14 @@
 # PAGES — Dominos
 
 > Déduit de `IDEE.md` (mécanique, boucle quotidienne, carte de fin) et de `CRITERES.md` (UI dans le viewport, streaks, commentaires).
-> Proposé le 2026-11-18. À valider par Gaia.
+> Proposé le 2026-11-18. **4 pages validées par Gaia le 2026-11-18. Style verrouillé (/lock).**
 
 | # | Page | Rôle | Contenu clé | Statut |
 |---|------|------|-------------|--------|
 | 1 | **Jeu** (page principale) | Jouer la chaîne du jour ; une seule règle lisible en 5 s | Scène des 8 pièces, pièce visée + flèche au sol, compteur en mini-pièces, nombre de poussées, consigne, bouton Push | **Validée** (Encre, 2026-11-18) · `planches/v2/encre/01-jeu.html` |
 | 2 | **Post** | État du post dans le feed avant d'y toucher | En-tête de post, titre du jour (#n + date), aperçu figé de la chaîne, appel « Play » | À dessiner |
-| 3 | **Carte de fin** | Clore la partie et donner envie de revenir / commenter | Résultat (x/8, poussées, ordre), série, commentaire pré-rempli en un geste, compte à rebours | En revue · `planches/v2/encre/03-fin.html` |
-| 4 | **Séries & classement** | Montrer la communauté | Série + calendrier 4 semaines, joueurs du jour, % qui ont tout fait tomber, répartition des poussées | En revue · `planches/v2/encre/04-series.html` |
+| 3 | **Carte de fin** | Clore la partie et donner envie de revenir / commenter | Résultat (x/8, poussées, ordre), série, commentaire pré-rempli en un geste, compte à rebours | **Validée** · `planches/v2/encre/03-fin.html` |
+| 4 | **Séries & classement** | Montrer la communauté | Série + calendrier 4 semaines, joueurs du jour, % qui ont tout fait tomber, répartition des poussées | **Validée** · `planches/v2/encre/04-series.html` |
 
 ## Questions produit ouvertes (non tranchées, absentes de `IDEE.md`)
 
